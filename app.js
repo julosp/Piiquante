@@ -1,20 +1,18 @@
 const express = require("express");
 const mongoose = require("mongoose");
 
-const app = express();
+const saucesRoutes = require("./routes/sauces");
+const userRoutes = require("./routes/user");
 
 mongoose
   .connect(
-    "mongodb+srv://cspr777:dktbwQYPN0lGJ8G2@cluster0.uclxlil.mongodb.net/?retryWrites=true&w=majority",
-    {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    }
+    "mongodb+srv://cspr777:aWh6O2csFc9ZxFf0@cluster1.pjcogv1.mongodb.net/?retryWrites=true&w=majority",
+    { useNewUrlParser: true, useUnifiedTopology: true }
   )
   .then(() => console.log("Connexion à MongoDB réussie !"))
   .catch(() => console.log("Connexion à MongoDB échouée !"));
 
-app.use(express.json());
+const app = express();
 
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
@@ -28,4 +26,10 @@ app.use((req, res, next) => {
   );
   next();
 });
+
+app.use(express.json());
+
+app.use("/api/sauces", saucesRoutes);
+app.use("/api/auth", userRoutes);
+
 module.exports = app;
