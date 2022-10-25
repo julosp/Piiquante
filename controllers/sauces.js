@@ -59,7 +59,7 @@ exports.deleteSauces = (req, res, next) => {
       } else {
         const filename = sauces.imageUrl.split("/image/")[1];
         fs.unlink(`images/${filename}`, () => {
-          Sauces.deleteOne({ _id: req.params.id })
+          sauces.deleteOne({ _id: req.params.id })
             .then(() => res.status(200).json({ message: "Objet supprimé" }))
             .catch((error) => res.status(401).json({ error }));
         });
@@ -72,10 +72,8 @@ exports.getOneSauces = (req, res, next) => {
   sauces
     .findOne({ _id: req.params.id })
     .then((sauces) => {
-      console.log(sauces);
       res.status(200).json(sauces)})
     .catch((error) => {
-      console.log("error");
       res.status(404).json({ error })});
 };
 
