@@ -24,21 +24,21 @@ exports.createSauces = (req, res) => {
 exports.modifySauces = (req, res, next) => {
   const sauceObject = req.file
     ? {
-        ...JSON.parse(req.body.sauce),
+        ...JSON.parse(req.body.sauces),
         imageUrl: `${req.protocol}://${req.get("host")}/images/${
           req.file.filename
-        }`,
+        }`
       }
     : { ...req.body };
 
   delete sauceObject._userId;
   sauces
     .findOne({ id: req.params.id })
-    .then((sauce) => {
-      if (sauce.userId != req.auth.userId) {
-        res.status(400).json({ message: "Non-autorisé" });
+    .then((sauces) => {
+      if (sauces.userId != req.auth.userId) {
+        res.status(401).json({ message: "Non-autorisé" });
       } else {
-        sauce
+        sauces
           .updateOne(
             { _id: req.params.id },
             { ...sauceObject, _id: req.params.id }

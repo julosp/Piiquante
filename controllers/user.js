@@ -35,12 +35,15 @@ exports.login = (req, res, next) => {
               .status(401)
               .json({ message: "Paire login/mot de passe incorrecte" });
           }
-          res.status(200).json({
+          let result = {
             userId: user._id,
-            token: jwt.sign({ userId: user._id }, "RANDOM_TOKEN_SECRET", {
+            token: jwt.sign({ userId: user._id }, "eyJ0eXAiOiJKV1QiLCJhbGciOiJFUzM4NCIsImtpZCI6IjRjMTdiZTdiMTcyOGQxMmY3ZGI4NzNhZWU5ODk0ODdmIn0.e30.qgxsrWzeuIhlYwGXyTrXKRwp0KxXf2_UgFc5jb0RWvCrmAYypiXZSP9Wam1xYtMF7IqRwmm6foX0xA-BlcCcof0b9Ujq8s3J-AfpEcdzQoHqdpYr5cOs3NyvDTsMumJp", {
               expiresIn: "24h",
             }),
-          });
+          };
+          console.log(result);
+
+          return res.status(200).json(result);
         })
         .catch((error) => res.status(500).json({ error }));
     })
