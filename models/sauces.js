@@ -1,6 +1,6 @@
-const mongoose = require("mongoose");
+const mongoose = require("mongoose"); //appel de Mongoose
 
-const sauceSchema = mongoose.Schema({
+const sauceSchema = mongoose.Schema({ //utilisation du .schema pour crée un schema type pour les sauces (id de l'utilisateur qui crée, nom, descriptions...)
   userId: {type: String, require: true},
   name: { type: String, require: true },
   manufacturer: { type: String, require: true },
@@ -14,4 +14,4 @@ const sauceSchema = mongoose.Schema({
   usersDisliked: { type: [String] },
 });
 
-module.exports = mongoose.model("sauces", sauceSchema);
+module.exports = mongoose.model("sauces", sauceSchema); //export du model

@@ -1,24 +1,27 @@
-const express = require("express");
-const mongoose = require("mongoose");
-const path = require("path");
-const helmet = require("helmet");
-const mongoSanitize = require("express-mongo-sanitize");
-const hpp = require("hpp");
+const express = require("express"); //appel d'Express pour création Appli web
+const mongoose = require("mongoose"); //appel de Mongoose pour base de donnée
+const path = require("path"); //appel de Path pour gérer et transformer les chemins de fichier
+const helmet = require("helmet"); //appel de Helmet pour securiser les headers HTTP
+const mongoSanitize = require("express-mongo-sanitize"); //appel de Mongo Sanitize pour proteger des injections
+const hpp = require("hpp"); //appel de hpp pour proteger les requetes HTTP
+const xss = require("xss"); //appel de xss pour filter les inputs des utilisateurs
+require("dotenv").config() //appel du fichier .env
 
-const saucesRoutes = require("./routes/sauces");
-const userRoutes = require("./routes/user");
+const mongoKey = process.env.MONGO_API_KEY; //appel de la clé de connexion MongoDB
+const saucesRoutes = require("./routes/sauces"); //appel de la route sauces
+const userRoutes = require("./routes/user"); //appel de la route user
 
-mongoose
+mongoose // connexion a la basse de donnée MongoDB
   .connect(
-    "mongodb+srv://cspr777:aWh6O2csFc9ZxFf0@cluster1.pjcogv1.mongodb.net/?retryWrites=true&w=majority",
+    mongoKey,
     { useNewUrlParser: true, useUnifiedTopology: true }
   )
-  .then(() => console.log("Connexion à MongoDB réussie !"))
+  .then(() => console.log("Connexion à MongoDB réussie !")) 
   .catch(() => console.log("Connexion à MongoDB échouée !"));
 
-const app = express();
+const app = express(); //création de l'app via Express
 
-app.use((req, res, next) => {
+app.use((req, res, next) => { //CORS -- permet au deux origines de communiquer entre elles
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader(
     "Access-Control-Allow-Headers",
@@ -33,12 +36,14 @@ app.use((req, res, next) => {
 
 app.use(express.json());
 
-app.use("/api/sauces", saucesRoutes);
-app.use("/api/auth", userRoutes);
-app.use("/images", express.static(path.join(__dirname, "images")));
+app.use("/api/sauces", saucesRoutes); //appel des routes Sauces
+app.use("/api/auth", userRoutes); //appel des routes User
+app.use("/images", express.static(path.join(__dirname, "images"))); //appel de la routes du fichier images
 
-app.use(helmet());
-app.use(mongoSanitize());
-app.use(hpp());
+app.use(helmet()); //utilisation de helmet
+app.use(mongoSanitize()); //utilisation de mongo sanitize
+app.use(hpp()); //utilisation de hpp
+const html = xss('<script>alert("xss");</script>'); //utilisation de xss
+console.log(html);
 
-module.exports = app;
+module.exports = app; //export de l'app
